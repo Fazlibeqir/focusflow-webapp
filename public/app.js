@@ -6,6 +6,7 @@ const initialTasks = [
 ];
 
 let tasks = JSON.parse(localStorage.getItem("focusflow-tasks") || "null") || initialTasks;
+let sessions = readSessions();
 let seconds = 25 * 60;
 let timer = null;
 
@@ -13,6 +14,24 @@ const taskList = document.querySelector("#taskList");
 const timerDisplay = document.querySelector("#timerDisplay");
 const timerButton = document.querySelector("#timerButton");
 const toast = document.querySelector("#toast");
+const activityBars = document.querySelector("#activityBars");
+const totalFocus = document.querySelector("#totalFocus");
+const focusTrend = document.querySelector("#focusTrend");
+
+function readSessions() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("focusflow-sessions") || "[]");
+    return Array.isArray(saved) ? saved.filter((session) => (
+      session
+      && Number.isFinite(session.durationMinutes)
+      && session.durationMinutes > 0
+      && !Number.isNaN(Date.parse(session.completedAt))
+    )) : [];
+  } catch (error) {
+    console.warn("Unable to read saved focus sessions.", error);
+    return [];
+  }
+}
 
 function renderTasks() {
   taskList.innerHTML = tasks.map((task, index) => `
@@ -55,6 +74,50 @@ function updateTimer() {
   const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
   const remainder = (seconds % 60).toString().padStart(2, "0");
   timerDisplay.textContent = `${minutes}:${remainder}`;
+}
+
+function formatDuration(minutes) {
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return hours ? `${hours}h ${remainder}m` : `${remainder}m`;
+}
+
+function renderActivity() {
+  const today = new Date();
+  const days = Array.from({ length: 7 }, (_, offset) => {
+    const date = new Date(today);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(today.getDate() - (6 - offset));
+    return date;
+  });
+  const dailyMinutes = days.map((day) => sessions
+    .filter((session) => {
+      const completedAt = new Date(session.completedAt);
+      return completedAt.getFullYear() === day.getFullYear()
+        && completedAt.getMonth() === day.getMonth()
+        && completedAt.getDate() === day.getDate();
+    })
+    .reduce((total, session) => total + session.durationMinutes, 0));
+  const maxMinutes = Math.max(60, ...dailyMinutes);
+  activityBars.innerHTML = days.map((day, index) => {
+    const height = dailyMinutes[index] ? Math.max(4, (dailyMinutes[index] / maxMinutes) * 100) : 0;
+    const label = day.toLocaleDateString(undefined, { weekday: "short" });
+    const current = index === days.length - 1 ? " current" : "";
+    return `<div class="${current.trim()}" aria-label="${label}: ${formatDuration(dailyMinutes[index])}"><i style="height:${height}%"></i><small>${label}</small></div>`;
+  }).join("");
+  const firstDay = days[0];
+  const weeklySessions = sessions
+    .filter((session) => new Date(session.completedAt) >= firstDay);
+  const totalMinutes = weeklySessions
+    .reduce((total, session) => total + session.durationMinutes, 0);
+  totalFocus.textContent = formatDuration(totalMinutes);
+  focusTrend.textContent = totalMinutes ? `${weeklySessions.length} completed session${weeklySessions.length === 1 ? "" : "s"}` : "No completed sessions yet";
+}
+
+function completeFocusSession() {
+  sessions.push({ completedAt: new Date().toISOString(), durationMinutes: 25 });
+  localStorage.setItem("focusflow-sessions", JSON.stringify(sessions));
+  renderActivity();
 }
 
 taskList.addEventListener("click", (event) => {
@@ -141,6 +204,7 @@ timerButton.addEventListener("click", () => {
       timer = null;
       timerButton.innerHTML = "▶ Start focus";
       document.querySelector("#timerStatus").textContent = "Session complete";
+      completeFocusSession();
       showToast("Focus session complete 🎉");
     }
   }, 1000);
@@ -148,3 +212,4 @@ timerButton.addEventListener("click", () => {
 
 renderTasks();
 updateTimer();
+renderActivity();
