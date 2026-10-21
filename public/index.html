@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8fc" />
+    <title>FocusFlow — Plan less. Focus more.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#"><span class="brand-mark">✦</span><span>focus<span>flow</span></span></a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a class="nav-link active" href="#today"><span>▦</span> Today <b>4</b></a>
+          <a class="nav-link" href="#inbox"><span>⌁</span> Inbox</a>
+          <a class="nav-link" href="#analytics"><span>◔</span> Analytics</a>
+        </nav>
+        <div class="sidebar-section">
+          <p class="eyebrow">Workspaces</p>
+          <a class="workspace-link" href="#"><span class="workspace-dot purple"></span> Personal</a>
+          <a class="workspace-link" href="#"><span class="workspace-dot orange"></span> Side project</a>
+          <button class="add-workspace">＋ Add workspace</button>
+        </div>
+        <div class="sidebar-footer">
+          <div class="quote-card"><span>“</span><p>Small steps every day add up to big results.</p><small>— James Clear</small></div>
+          <div class="user-card"><div class="avatar">BF</div><div><strong>Beqir Fazli</strong><small>Free plan</small></div><button aria-label="Account menu">•••</button></div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark">✦</span> focusflow</div>
+          <div class="date-label"><span class="sun">☼</span> Tuesday, October 21 <span class="today-pill">Today</span></div>
+          <div class="top-actions"><button class="icon-button" aria-label="Search">⌕</button><button class="icon-button" aria-label="Notifications">♢<i></i></button><button class="upgrade-button">Upgrade <span>↗</span></button></div>
+        </header>
+
+        <section class="welcome-row">
+          <div><p class="eyebrow">GOOD MORNING, BEQIR <span class="wave">👋</span></p><h1>Make today count.</h1><p class="subtitle">You have <strong>4 tasks</strong> on your plate. Let's make some progress.</p></div>
+          <button class="primary-button" id="newTaskButton">＋ New task</button>
+        </section>
+
+        <section class="stats-grid">
+          <article class="stat-card progress-stat"><div class="stat-icon violet">◔</div><div><span class="stat-label">Daily progress</span><strong id="progressText">25%</strong></div><div class="mini-progress"><span id="progressBar"></span></div><small id="progressDetail">1 of 4 tasks completed</small></article>
+          <article class="stat-card"><div class="stat-icon peach">♨</div><div><span class="stat-label">Focus time</span><strong>1h 24m</strong></div><small><span class="positive">↑ 18%</span> vs. yesterday</small></article>
+          <article class="stat-card"><div class="stat-icon mint">✦</div><div><span class="stat-label">Current streak</span><strong>6 days</strong></div><small>Best: <strong>12 days</strong></small></article>
+        </section>
+
+        <div class="content-grid">
+          <section class="tasks-panel" id="today">
+            <div class="section-heading"><div><h2>Today's focus</h2><p>Prioritize what matters most.</p></div><div class="view-toggle"><button class="selected">☷</button><button>▦</button></div></div>
+            <div class="task-list" id="taskList" aria-live="polite"></div>
+            <button class="add-task-row" id="addTaskRow">＋ Add a task</button>
+          </section>
+
+          <aside class="focus-card" id="focusCard">
+            <div class="focus-header"><div><p class="eyebrow">DEEP WORK</p><h2>Focus timer</h2></div><button class="more-button">•••</button></div>
+            <p class="focus-task-label">Current task</p><h3 id="focusTask">Design the onboarding flow</h3>
+            <div class="timer-wrap"><div class="timer-ring"><div><strong id="timerDisplay">25:00</strong><span id="timerStatus">Ready to focus</span></div></div></div>
+            <div class="timer-controls"><button class="timer-skip" id="resetTimer">↺</button><button class="timer-start" id="timerButton">▶ Start focus</button><button class="timer-skip" id="skipTimer">↠</button></div>
+            <div class="focus-tip"><span>✦</span><p><strong>Tip:</strong> Put your phone away and give this task your full attention.</p></div>
+          </aside>
+        </div>
+
+        <section class="bottom-section" id="analytics">
+          <div class="section-heading"><div><h2>Focus activity</h2><p>Your focus time over the last 7 days.</p></div><button class="period-button">This week　⌄</button></div>
+          <div class="chart-card"><div class="chart-y"><span>4h</span><span>3h</span><span>2h</span><span>1h</span><span>0</span></div><div class="chart"><div class="grid-line one"></div><div class="grid-line two"></div><div class="grid-line three"></div><div class="grid-line four"></div><div class="bars"><div><i style="height:34%"></i><small>Wed</small></div><div><i style="height:57%"></i><small>Thu</small></div><div><i style="height:42%"></i><small>Fri</small></div><div><i style="height:75%"></i><small>Sat</small></div><div><i style="height:50%"></i><small>Sun</small></div><div><i style="height:88%"></i><small>Mon</small></div><div class="current"><i style="height:64%"></i><small>Tue</small></div></div></div><div class="chart-total"><span>Total focus</span><strong>11h 42m</strong><small><span class="positive">↑ 24%</span> from last week</small></div></div>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast">Task added</div>
+    <script src="app.js"></script>
+  </body>
+</html>
