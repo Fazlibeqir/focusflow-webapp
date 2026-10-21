@@ -18,8 +18,12 @@ function renderTasks() {
   taskList.innerHTML = tasks.map((task, index) => `
     <div class="task ${task.done ? "done" : ""}" data-index="${index}">
       <button class="check" type="button" aria-label="${task.done ? "Mark incomplete" : "Mark complete"}" aria-pressed="${task.done}">${task.done ? "✓" : ""}</button>
-      <span class="task-name">${task.name}</span>
-      <span class="task-meta"><span class="tag ${task.tag === "Admin" ? "orange" : ""}">${task.tag}</span><span class="task-time">${task.time}</span></span>
+      <span class="task-name">${escapeHtml(task.name)}</span>
+      <span class="task-meta"><span class="tag ${task.tag === "Admin" ? "orange" : ""}">${escapeHtml(task.tag)}</span><span class="task-time">${escapeHtml(task.time)}</span></span>
+      <span class="task-actions">
+        <button class="task-action edit-task" type="button" aria-label="Edit ${escapeHtml(task.name)}">Edit</button>
+        <button class="task-action delete-task" type="button" aria-label="Delete ${escapeHtml(task.name)}">Delete</button>
+      </span>
     </div>
   `).join("");
   const complete = tasks.filter((task) => task.done).length;
@@ -29,6 +33,16 @@ function renderTasks() {
   document.querySelector("#progressDetail").textContent = `${complete} of ${tasks.length} tasks completed`;
   document.querySelector(".nav-link b").textContent = tasks.filter((task) => !task.done).length;
   localStorage.setItem("focusflow-tasks", JSON.stringify(tasks));
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[character]));
 }
 
 function showToast(message) {
@@ -47,10 +61,40 @@ taskList.addEventListener("click", (event) => {
   const task = event.target.closest(".task");
   if (!task) return;
   const index = Number(task.dataset.index);
+  if (event.target.closest(".edit-task")) {
+    editTask(index);
+    return;
+  }
+  if (event.target.closest(".delete-task")) {
+    deleteTask(index);
+    return;
+  }
+  if (!event.target.closest(".check")) return;
   tasks[index].done = !tasks[index].done;
   renderTasks();
   showToast(tasks[index].done ? "Task completed ✓" : "Task marked incomplete");
 });
+
+function editTask(index) {
+  const name = window.prompt("Update the task name", tasks[index].name);
+  if (name === null) return;
+  const trimmedName = name.trim();
+  if (!trimmedName) {
+    showToast("Task name cannot be empty");
+    return;
+  }
+  tasks[index].name = trimmedName;
+  renderTasks();
+  showToast("Task updated");
+}
+
+function deleteTask(index) {
+  const taskName = tasks[index].name;
+  if (!window.confirm(`Delete "${taskName}"?`)) return;
+  tasks.splice(index, 1);
+  renderTasks();
+  showToast("Task deleted");
+}
 
 function addTask() {
   const name = window.prompt("What do you want to focus on?");
