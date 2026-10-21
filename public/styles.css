@@ -35,3 +35,15 @@
   .timer-ring span{font-size:11px}
   .timer-start{padding:13px 19px;font-size:13px}
 }
+
+.task-actions{display:flex;gap:5px;margin-left:8px;opacity:0;transition:opacity .2s}
+.task:hover .task-actions,.task:focus-within .task-actions{opacity:1}
+.task-action{background:#f6f5fb;color:var(--purple);border-radius:5px;padding:5px 7px;font-size:10px;font-weight:700}
+.task-action:hover,.task-action:focus-visible{background:var(--light-purple)}
+.delete-task{color:#c77468}
+@media(max-width:600px){
+  .task-actions{opacity:1}
+  .task{align-items:flex-start;flex-wrap:wrap}
+  .task-meta{margin-left:auto}
+  .task-actions{width:100%;margin-left:34px}
+}
