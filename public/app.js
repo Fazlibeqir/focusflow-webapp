@@ -18,6 +18,8 @@ const activityBars = document.querySelector("#activityBars");
 const totalFocus = document.querySelector("#totalFocus");
 const focusTrend = document.querySelector("#focusTrend");
 const mobileNav = document.querySelector(".mobile-nav");
+const focusCard = document.querySelector("#focusCard");
+const exitFocus = document.querySelector("#exitFocus");
 
 function readSessions() {
   try {
@@ -122,6 +124,27 @@ function completeFocusSession() {
   renderActivity();
 }
 
+async function enterFocusFullscreen() {
+  if (!document.fullscreenEnabled || !focusCard.requestFullscreen) {
+    showToast("Fullscreen is not available in this browser");
+    return;
+  }
+  try {
+    await focusCard.requestFullscreen();
+  } catch (error) {
+    console.warn("Unable to enter fullscreen focus mode.", error);
+    showToast("Fullscreen was blocked by the browser");
+  }
+}
+
+function leaveFocusFullscreen() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch((error) => {
+      console.warn("Unable to exit fullscreen focus mode.", error);
+    });
+  }
+}
+
 mobileNav.addEventListener("click", (event) => {
   const link = event.target.closest(".mobile-nav-link");
   if (!link) return;
@@ -195,6 +218,7 @@ document.querySelector("#skipTimer").addEventListener("click", () => {
   timer = null;
   timerButton.innerHTML = "▶ Start focus";
   document.querySelector("#timerStatus").textContent = "Session complete";
+  leaveFocusFullscreen();
   showToast("Focus session complete 🎉");
 });
 timerButton.addEventListener("click", () => {
@@ -205,6 +229,7 @@ timerButton.addEventListener("click", () => {
     document.querySelector("#timerStatus").textContent = "Paused";
     return;
   }
+  enterFocusFullscreen();
   timerButton.innerHTML = "Ⅱ Pause focus";
   document.querySelector("#timerStatus").textContent = "In the zone";
   timer = setInterval(() => {
@@ -216,10 +241,12 @@ timerButton.addEventListener("click", () => {
       timerButton.innerHTML = "▶ Start focus";
       document.querySelector("#timerStatus").textContent = "Session complete";
       completeFocusSession();
+      leaveFocusFullscreen();
       showToast("Focus session complete 🎉");
     }
   }, 1000);
 });
+exitFocus.addEventListener("click", leaveFocusFullscreen);
 
 renderTasks();
 updateTimer();

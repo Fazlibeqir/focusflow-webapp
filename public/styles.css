@@ -50,6 +50,19 @@
 .mobile-nav{display:none}
 .inbox-panel{margin-top:35px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:14px}
 .inbox-empty{margin:22px 0 0;color:var(--muted);font-size:13px}
+.focus-actions{display:flex;align-items:center;gap:12px}
+.exit-focus{display:none;background:#3a3948;color:#d8d6e4;border:1px solid #555365;border-radius:7px;padding:7px 10px;font-size:10px;font-weight:700}
+.focus-card:fullscreen{display:flex;flex-direction:column;justify-content:center;width:100vw;height:100vh;max-width:none;border:0;border-radius:0;padding:8vh 12vw;background:radial-gradient(circle at 50% 38%,#3a3850 0,#262632 42%,#1b1b24 100%);color:#fff}
+.focus-card:fullscreen .focus-header{position:absolute;top:34px;left:48px;right:48px}
+.focus-card:fullscreen .exit-focus{display:block}
+.focus-card:fullscreen .focus-task-label{margin-top:34px;text-align:center}
+.focus-card:fullscreen h3{text-align:center;font-size:clamp(18px,2.4vw,28px)}
+.focus-card:fullscreen .timer-wrap{margin:48px 0}
+.focus-card:fullscreen .timer-ring{width:min(34vw,320px);height:min(34vw,320px)}
+.focus-card:fullscreen .timer-ring strong{font-size:clamp(44px,6vw,72px)}
+.focus-card:fullscreen .timer-ring span{font-size:14px}
+.focus-card:fullscreen .timer-start{padding:15px 24px;font-size:14px}
+.focus-card:fullscreen .focus-tip{align-self:center;max-width:360px}
 @media(max-width:600px){
   .mobile-nav{display:flex;position:sticky;top:0;z-index:5;gap:6px;margin:0 -16px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line)}
   .mobile-nav-link{display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;flex:1;border-radius:8px;color:#858592;text-decoration:none;font-size:11px;font-weight:700}
@@ -57,4 +70,7 @@
   .mobile-nav-link b{background:#fff;color:var(--purple);border-radius:6px;padding:2px 5px;font-size:9px}
   .mobile-nav-link.active{background:var(--light-purple);color:var(--purple)}
   .mobile-nav-link.active b{background:#fff}
+  .focus-card:fullscreen{padding:72px 24px 32px}
+  .focus-card:fullscreen .focus-header{top:20px;left:20px;right:20px}
+  .focus-card:fullscreen .timer-ring{width:min(70vw,280px);height:min(70vw,280px)}
 }
