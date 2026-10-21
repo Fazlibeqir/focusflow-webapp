@@ -47,3 +47,14 @@
   .task-meta{margin-left:auto}
   .task-actions{width:100%;margin-left:34px}
 }
+.mobile-nav{display:none}
+.inbox-panel{margin-top:35px;padding:25px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.inbox-empty{margin:22px 0 0;color:var(--muted);font-size:13px}
+@media(max-width:600px){
+  .mobile-nav{display:flex;position:sticky;top:0;z-index:5;gap:6px;margin:0 -16px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--line)}
+  .mobile-nav-link{display:flex;align-items:center;justify-content:center;gap:6px;min-height:38px;flex:1;border-radius:8px;color:#858592;text-decoration:none;font-size:11px;font-weight:700}
+  .mobile-nav-link span{font-size:16px}
+  .mobile-nav-link b{background:#fff;color:var(--purple);border-radius:6px;padding:2px 5px;font-size:9px}
+  .mobile-nav-link.active{background:var(--light-purple);color:var(--purple)}
+  .mobile-nav-link.active b{background:#fff}
+}

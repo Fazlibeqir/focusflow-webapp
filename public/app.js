@@ -17,6 +17,7 @@ const toast = document.querySelector("#toast");
 const activityBars = document.querySelector("#activityBars");
 const totalFocus = document.querySelector("#totalFocus");
 const focusTrend = document.querySelector("#focusTrend");
+const mobileNav = document.querySelector(".mobile-nav");
 
 function readSessions() {
   try {
@@ -51,6 +52,7 @@ function renderTasks() {
   document.querySelector("#progressBar").style.width = `${percentage}%`;
   document.querySelector("#progressDetail").textContent = `${complete} of ${tasks.length} tasks completed`;
   document.querySelector(".nav-link b").textContent = tasks.filter((task) => !task.done).length;
+  mobileNav.querySelector("b").textContent = tasks.filter((task) => !task.done).length;
   localStorage.setItem("focusflow-tasks", JSON.stringify(tasks));
 }
 
@@ -119,6 +121,15 @@ function completeFocusSession() {
   localStorage.setItem("focusflow-sessions", JSON.stringify(sessions));
   renderActivity();
 }
+
+mobileNav.addEventListener("click", (event) => {
+  const link = event.target.closest(".mobile-nav-link");
+  if (!link) return;
+  mobileNav.querySelectorAll(".mobile-nav-link").forEach((item) => {
+    item.classList.toggle("active", item === link);
+    item.toggleAttribute("aria-current", item === link);
+  });
+});
 
 taskList.addEventListener("click", (event) => {
   const task = event.target.closest(".task");
